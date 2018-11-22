@@ -7,12 +7,14 @@ const AppWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
+  touch-action: manipulation; // prevent double touch to zoom on mobile
+  background-color: ${props => props.isCorrect ? "#e4ffe4" : "none"};
 `;
 
 const PracticeProblem = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
   padding: 1.5rem 0;
   box-sizing: border-box;
@@ -20,7 +22,6 @@ const PracticeProblem = styled.div`
   max-width: 600px;
   min-height: 400px;
   border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 const Inputs = styled.div`
@@ -30,6 +31,7 @@ const Inputs = styled.div`
   align-items: center;
   width: 40%;
   max-height: 200px;
+  margin-top: 2rem;
 `;
 
 const Result = styled.div`
@@ -45,7 +47,7 @@ const Result = styled.div`
 const Button = styled.button.attrs({ type: "button" })`
   height: 40px;
   width: 100%;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: none;
   border-radius: 4px;
   color: rgba(0, 0, 0, 0.7);
   font-size: 1.2rem;
@@ -54,7 +56,7 @@ const Button = styled.button.attrs({ type: "button" })`
   outline: none;
   margin: 0 4px;
   background-color: ${props =>
-    props.isActive ? "rgba(0, 0, 0, 0.03)" : "rgba(0, 0, 0, 0.0)"};
+    props.isActive ? "rgba(0, 0, 0, 0.03)" : "rgba(0, 0, 0, 0.02)"};
   border-color: ${props =>
     props.isActive ? "rgba(0, 0, 0, 0.15)" : "rgba(0, 0, 0, 0.12)"};
 
@@ -78,6 +80,13 @@ const ControlButton = styled(Button)`
   font-size: ${props => (props.isIcon ? "1.2rem" : "0.7rem")};
 `;
 
+const SuccessButton = styled(Button)`
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const Prompt = styled.div`
   display: flex;
   justify-content: center;
@@ -87,6 +96,10 @@ const Prompt = styled.div`
   p {
     color: rgba(0, 0, 0, 0.8);
     font-size: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
   }
 `;
 
@@ -108,7 +121,7 @@ const PromptInput = styled.div`
   transition: border-color 0.05s, background-color 0.05;
   color: #333;
   background-color: ${props =>
-    props.isActive ? "rgba(0, 0, 0, 0.075)" : "rgba(0, 0, 0, 0.02)"};
+    props.isActive ? "rgba(0, 0, 0, 0.075)" : props.hasAnswer ? "rgba(0, 0, 0, 0.0)" : "rgba(0, 0, 0, 0.02)"};
   border-radius: 0.2rem;
   cursor: pointer;
 `;
@@ -124,10 +137,18 @@ const Operand = styled.span`
   margin: 0 1rem;
 `;
 
-const DeepEquality = styled.span`
+const DeepEquality = styled.div`
   color: #bbb;
   font-size: 1.4rem;
   margin: 0 1rem;
+`;
+
+const EquationHalf = styled.div`
+  @media (max-width: 768px) {
+    margin: 1rem 0;
+  }
+  display: flex;
+
 `;
 
 export default function App() {
@@ -221,33 +242,36 @@ export default function App() {
     return _ => {
       handleAnswerUpdate(userActiveAnswer, answer);
       setActiveAnswer(userActiveAnswer + 1);
+      document.activeElement.blur();
     };
   }
 
-  const isAnswerReady =
-    userAnswer.join("").length === problem.answer.join("").length;
-
   return (
-    <AppWrapper>
+    <AppWrapper isCorrect={hasResult && result}>
       <PracticeProblem>
         <Result shouldShow={hasResult}>
-          {result ? "correct" : "incorrect"}
+          {result ? <span>&nbsp;</span> : "incorrect"}
         </Result>
         <Prompt>
-          {problem.isBinary && <Operand>{problem.operands[0]}</Operand>}{" "}
-          <Operator>{problem.operator}</Operator>
-          {problem.isBinary && " "}
-          <Operand>{problem.operands[problem.isBinary ? 1 : 0]}</Operand>{" "}
+          <EquationHalf>
+            {problem.isBinary && <Operand>{problem.operands[0]}</Operand>}{" "}
+            <Operator>{problem.operator}</Operator>
+            {problem.isBinary && " "}
+            <Operand>{problem.operands[problem.isBinary ? 1 : 0]}</Operand>{" "}
+          </EquationHalf>
           <DeepEquality>===</DeepEquality>
-          {problem.answer.map((answer, i) => (
-            <PromptInput
-              key={`${answer}-${i}`}
-              isActive={i === userActiveAnswer}
-              onClick={e => setActiveAnswer(i)}
-            >
-              {userAnswer[i]}
-            </PromptInput>
-          ))}
+          <EquationHalf>
+            {problem.answer.map((answer, i) => (
+              <PromptInput
+                key={`${answer}-${i}`}
+                isActive={i === userActiveAnswer}
+                hasAnswer={userAnswer[i] !== ""}
+                onClick={e => setActiveAnswer(i)}
+              >
+                {userAnswer[i]}
+              </PromptInput>
+            ))}
+          </EquationHalf>
         </Prompt>
         <Inputs>
           {(!hasResult || !result) && (
@@ -260,9 +284,7 @@ export default function App() {
                 ))}
               </AnswerInputs>
               <AnswerInputs>
-                <SubmitButton isActive={isAnswerReady} onClick={handleSubmit}>
-                  Submit ✓
-                </SubmitButton>
+                <SubmitButton onClick={handleSubmit}>Submit ✓</SubmitButton>
                 <ControlButton isIcon={true} onClick={handleBackspace}>
                   ⌫
                 </ControlButton>
@@ -274,9 +296,9 @@ export default function App() {
             </>
           )}
           {hasResult && result && (
-            <Button onClick={handleNext} isActive={true}>
-              Next Problem
-            </Button>
+            <SuccessButton onClick={handleNext} isActive={true}>
+              <span role="img" aria-label="Hooray!">🎉</span> Continue
+            </SuccessButton>
           )}
         </Inputs>
       </PracticeProblem>
