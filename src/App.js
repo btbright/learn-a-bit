@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { makeMissingAnswerProblem } from "./bitwiseMath";
 
@@ -53,6 +53,10 @@ const Button = styled.button.attrs({ type: "button" })`
   cursor: pointer;
   outline: none;
   margin: 0 4px;
+  background-color: ${props =>
+    props.isActive ? "rgba(0, 0, 0, 0.03)" : "rgba(0, 0, 0, 0.0)"};
+  border-color: ${props =>
+    props.isActive ? "rgba(0, 0, 0, 0.15)" : "rgba(0, 0, 0, 0.12)"};
 
   &:hover,
   &:focus {
@@ -62,17 +66,19 @@ const Button = styled.button.attrs({ type: "button" })`
 `;
 
 const SubmitButton = styled(Button)`
-  color: #12b712;
   width: 100%;
+  font-size: 0.85rem;
+  color: rgba(0, 0, 0, 0.3);
 `;
 
-const BackspaceButton = styled(Button)`
+const ControlButton = styled(Button)`
   color: rgba(0, 0, 0, 0.3);
   flex-shrink: 0;
   width: 40px;
+  font-size: ${props => (props.isIcon ? "1.2rem" : "0.7rem")};
 `;
 
-const Prompt = styled.p`
+const Prompt = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -91,20 +97,20 @@ const AnswerInputs = styled.div`
   margin: 10px 0;
 `;
 
-const PromptInput = styled.input`
+const PromptInput = styled.div`
   border: none;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.15);
   margin: 0 4px;
   font-size: 2rem;
-  width: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
   outline: none;
   text-align: center;
-  transition: border-color 0.05s;
+  transition: border-color 0.05s, background-color 0.05;
   color: #333;
-
-  &:focus {
-    border-color: rgba(0, 0, 0, 0.55);
-  }
+  background-color: ${props =>
+    props.isActive ? "rgba(0, 0, 0, 0.075)" : "rgba(0, 0, 0, 0.02)"};
+  border-radius: 0.2rem;
+  cursor: pointer;
 `;
 
 const Operator = styled.span`
@@ -129,27 +135,51 @@ export default function App() {
   const [userAnswer, setUserAnswer] = useState(
     new Array(problem.answer.length).fill("")
   );
+  const [activeAnswer, setActiveAnswer] = useState(null);
   const [result, setResult] = useState(null);
   const hasResult = result !== null;
-  const userAnswerFieldRefs = userAnswer.map(_ => useRef(null));
-  const submitAnswerButtonRef = useRef(null);
-  console.log(problem, userAnswer);
 
-  const firstEmptyAnswerIndex = userAnswer.findIndex(answer => answer === "");
+  const userActiveAnswer = activeAnswer || 0;
+  const answerOptions = ["1", "0"];
+
+  const handleKeyDown = e => {
+    const { key } = e;
+    if (key === "Tab" && activeAnswer <= problem.answer.length - 1) {
+      e.preventDefault();
+    }
+  };
+
+  const handleKeyUp = e => {
+    const { key, shiftKey } = e;
+    if (answerOptions.indexOf(key) !== -1) {
+      handleAnswerUpdate(userActiveAnswer, key);
+      setActiveAnswer(activeAnswer + 1);
+    } else if (key === "Enter") {
+      if (hasResult && result === true) {
+        handleNext();
+      } else {
+        handleSubmit();
+      }
+    } else if (key === "n") {
+      handleNext();
+    } else if (key === "r") {
+      handleResetAnswer();
+    } else if (key === "Tab") {
+      setActiveAnswer(activeAnswer + (shiftKey ? -1 : 1));
+      e.preventDefault();
+    } else if (key === "Backspace") {
+      handleBackspace();
+    }
+  };
 
   useEffect(() => {
-    if (hasResult) return;
-    if (firstEmptyAnswerIndex !== -1) return;
-    submitAnswerButtonRef &&
-      submitAnswerButtonRef.current &&
-      submitAnswerButtonRef.current.focus();
-  }, [firstEmptyAnswerIndex, submitAnswerButtonRef]);
-
-  useEffect(() => {
-    if (hasResult) return;
-    if (firstEmptyAnswerIndex === -1) return;
-    userAnswerFieldRefs[firstEmptyAnswerIndex].current.focus();
-  }, [firstEmptyAnswerIndex, userAnswerFieldRefs]);
+    document.addEventListener("keyup", handleKeyUp, true);
+    document.addEventListener("keydown", handleKeyDown, true);
+    return () => {
+      document.removeEventListener("keyup", handleKeyUp, true);
+      document.removeEventListener("keydown", handleKeyDown, true);
+    };
+  });
 
   function handleSubmit() {
     const isCorrect = userAnswer.join("") === problem.answer.join("");
@@ -161,19 +191,41 @@ export default function App() {
     setProblem(nextProblem);
     setUserAnswer(new Array(nextProblem.answer.length).fill(""));
     setResult(null);
+    setActiveAnswer(0);
+    document.activeElement.blur();
   }
 
   function handleResetAnswer() {
     setUserAnswer(new Array(problem.answer.length).fill(""));
+    setActiveAnswer(0);
+    setResult(null);
+    document.activeElement.blur();
   }
 
-  function handleAnswerUpdate(i, currentAnswer) {
-    return e => {
-      const currentAnswerCopy = currentAnswer.slice(0);
-      currentAnswerCopy[i] = e.target.value;
-      setUserAnswer(currentAnswerCopy);
+  function handleAnswerUpdate(i, answer) {
+    const currentAnswerCopy = userAnswer.slice(0);
+    currentAnswerCopy[i] = answer;
+    setUserAnswer(currentAnswerCopy);
+    document.activeElement.blur();
+  }
+
+  function handleBackspace() {
+    if (activeAnswer === 0) return;
+    const currentAnswerCopy = userAnswer.slice(0);
+    currentAnswerCopy[activeAnswer - 1] = "";
+    setUserAnswer(currentAnswerCopy);
+    setActiveAnswer(activeAnswer - 1);
+  }
+
+  function handleAnswerClick(answer) {
+    return _ => {
+      handleAnswerUpdate(userActiveAnswer, answer);
+      setActiveAnswer(userActiveAnswer + 1);
     };
   }
+
+  const isAnswerReady =
+    userAnswer.join("").length === problem.answer.join("").length;
 
   return (
     <AppWrapper>
@@ -189,33 +241,43 @@ export default function App() {
           <DeepEquality>===</DeepEquality>
           {problem.answer.map((answer, i) => (
             <PromptInput
-              ref={userAnswerFieldRefs[i]}
               key={`${answer}-${i}`}
-              onChange={handleAnswerUpdate(i, userAnswer, setUserAnswer)}
-              value={userAnswer[i]}
-            />
+              isActive={i === userActiveAnswer}
+              onClick={e => setActiveAnswer(i)}
+            >
+              {userAnswer[i]}
+            </PromptInput>
           ))}
         </Prompt>
         <Inputs>
           {(!hasResult || !result) && (
             <>
               <AnswerInputs>
-                <Button>0</Button>
-                <Button>1</Button>
+                {answerOptions.map(answer => (
+                  <Button key={answer} onClick={handleAnswerClick(answer)}>
+                    {answer}
+                  </Button>
+                ))}
               </AnswerInputs>
               <AnswerInputs>
-                <SubmitButton
-                  onClick={handleSubmit}
-                  ref={submitAnswerButtonRef}
-                >
-                  ✓
+                <SubmitButton isActive={isAnswerReady} onClick={handleSubmit}>
+                  Submit ✓
                 </SubmitButton>
-                <BackspaceButton>⌫</BackspaceButton>
-                <BackspaceButton onClick={handleResetAnswer}>↻</BackspaceButton>
+                <ControlButton isIcon={true} onClick={handleBackspace}>
+                  ⌫
+                </ControlButton>
+                <ControlButton isIcon={true} onClick={handleResetAnswer}>
+                  ↻
+                </ControlButton>
+                <ControlButton onClick={handleNext}>New</ControlButton>
               </AnswerInputs>
             </>
           )}
-          {hasResult && result && <Button onClick={handleNext}>Next</Button>}
+          {hasResult && result && (
+            <Button onClick={handleNext} isActive={true}>
+              Next Problem
+            </Button>
+          )}
         </Inputs>
       </PracticeProblem>
     </AppWrapper>
