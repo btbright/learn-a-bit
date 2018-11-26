@@ -119,7 +119,7 @@ const PromptInput = styled.div`
   outline: none;
   text-align: center;
   transition: border-color 0.05s, background-color 0.05;
-  color: #333;
+  color: rgba(0,0,0,0.8);
   background-color: ${props =>
     props.isActive ? "rgba(0, 0, 0, 0.075)" : props.hasAnswer ? "rgba(0, 0, 0, 0.0)" : "rgba(0, 0, 0, 0.02)"};
   border-radius: 0.2rem;
@@ -127,18 +127,18 @@ const PromptInput = styled.div`
 `;
 
 const Operator = styled.span`
-  color: #666;
+  color: rgba(0,0,0,0.6);
   font-size: 2rem;
 `;
 
 const Operand = styled.span`
-  color: #333;
+  color: rgba(0,0,0,0.8);
   font-size: 2rem;
   margin: 0 1rem;
 `;
 
 const DeepEquality = styled.div`
-  color: #bbb;
+  color: rgba(0,0,0,0.3);
   font-size: 1.4rem;
   margin: 0 1rem;
 `;
