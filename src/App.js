@@ -82,7 +82,7 @@ const ControlButton = styled(Button)`
   color: rgba(0, 0, 0, 0.3);
   flex-shrink: 0;
   width: 40px;
-  opacity: ${props => props.isDisabled ? 0.2 : 1};
+  opacity: ${props => (props.isDisabled ? 0.2 : 1)};
   font-size: ${props => (props.isIcon ? "1.2rem" : "0.7rem")};
 `;
 
@@ -171,6 +171,8 @@ export default function App() {
 
   const userActiveAnswer = activeAnswer || 0;
   const answerOptions = ["1", "0"];
+
+  const hasPartialAnswer = userAnswer.findIndex(answer => answer !== "") !== -1;
 
   const handleKeyDown = e => {
     const { key } = e;
@@ -294,10 +296,13 @@ export default function App() {
               </AnswerInputs>
               <AnswerInputs>
                 <SubmitButton onClick={handleSubmit}>Submit ✓</SubmitButton>
-                <ControlButton isIcon={true} onClick={handleResetAnswer}>
-                  ↻
-                </ControlButton>
-                <ControlButton onClick={handleNext}>New</ControlButton>
+                {hasPartialAnswer ? (
+                  <ControlButton isIcon={true} onClick={handleResetAnswer}>
+                    ↻
+                  </ControlButton>
+                ) : (
+                  <ControlButton onClick={handleNext}>New</ControlButton>
+                )}
                 <ControlButton
                   isDisabled={userActiveAnswer === 0}
                   isIcon={true}
