@@ -8,7 +8,8 @@ const AppWrapper = styled.div`
   align-items: center;
   height: 100vh;
   touch-action: manipulation; // prevent double touch to zoom on mobile
-  background-color: ${props => props.isCorrect ? "#e4ffe4" : "none"};
+  background-color: ${props => (props.isCorrect ? "#e4ffe4" : "none")};
+  transition: background-color 0.15s;
 `;
 
 const PracticeProblem = styled.div`
@@ -31,6 +32,7 @@ const Inputs = styled.div`
   align-items: center;
   width: 40%;
   max-height: 200px;
+  min-height: 120px;
   margin-top: 2rem;
 `;
 
@@ -48,6 +50,9 @@ const Button = styled.button.attrs({ type: "button" })`
   height: 40px;
   width: 100%;
   border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 4px;
   color: rgba(0, 0, 0, 0.7);
   font-size: 1.2rem;
@@ -77,6 +82,7 @@ const ControlButton = styled(Button)`
   color: rgba(0, 0, 0, 0.3);
   flex-shrink: 0;
   width: 40px;
+  opacity: ${props => props.isDisabled ? 0.2 : 1};
   font-size: ${props => (props.isIcon ? "1.2rem" : "0.7rem")};
 `;
 
@@ -119,26 +125,30 @@ const PromptInput = styled.div`
   outline: none;
   text-align: center;
   transition: border-color 0.05s, background-color 0.05;
-  color: rgba(0,0,0,0.8);
+  color: rgba(0, 0, 0, 0.8);
   background-color: ${props =>
-    props.isActive ? "rgba(0, 0, 0, 0.075)" : props.hasAnswer ? "rgba(0, 0, 0, 0.0)" : "rgba(0, 0, 0, 0.02)"};
+    props.isActive
+      ? "rgba(0, 0, 0, 0.075)"
+      : props.hasAnswer
+      ? "rgba(0, 0, 0, 0.0)"
+      : "rgba(0, 0, 0, 0.02)"};
   border-radius: 0.2rem;
   cursor: pointer;
 `;
 
 const Operator = styled.span`
-  color: rgba(0,0,0,0.6);
+  color: rgba(0, 0, 0, 0.6);
   font-size: 2rem;
 `;
 
 const Operand = styled.span`
-  color: rgba(0,0,0,0.8);
+  color: rgba(0, 0, 0, 0.8);
   font-size: 2rem;
   margin: 0 1rem;
 `;
 
 const DeepEquality = styled.div`
-  color: rgba(0,0,0,0.3);
+  color: rgba(0, 0, 0, 0.3);
   font-size: 1.4rem;
   margin: 0 1rem;
 `;
@@ -148,7 +158,6 @@ const EquationHalf = styled.div`
     margin: 1rem 0;
   }
   display: flex;
-
 `;
 
 export default function App() {
@@ -183,7 +192,7 @@ export default function App() {
       }
     } else if (key === "n") {
       handleNext();
-    } else if (key === "r") {
+    } else if (key === "r" || key === "c") {
       handleResetAnswer();
     } else if (key === "Tab") {
       setActiveAnswer(activeAnswer + (shiftKey ? -1 : 1));
@@ -285,19 +294,26 @@ export default function App() {
               </AnswerInputs>
               <AnswerInputs>
                 <SubmitButton onClick={handleSubmit}>Submit ✓</SubmitButton>
-                <ControlButton isIcon={true} onClick={handleBackspace}>
-                  ⌫
-                </ControlButton>
                 <ControlButton isIcon={true} onClick={handleResetAnswer}>
                   ↻
                 </ControlButton>
                 <ControlButton onClick={handleNext}>New</ControlButton>
+                <ControlButton
+                  isDisabled={userActiveAnswer === 0}
+                  isIcon={true}
+                  onClick={handleBackspace}
+                >
+                  ⌫
+                </ControlButton>
               </AnswerInputs>
             </>
           )}
           {hasResult && result && (
             <SuccessButton onClick={handleNext} isActive={true}>
-              <span role="img" aria-label="Hooray!">🎉</span> Continue
+              <span role="img" aria-label="Hooray!">
+                🎉
+              </span>{" "}
+              Continue
             </SuccessButton>
           )}
         </Inputs>
