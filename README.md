@@ -1,9 +1,5 @@
 # todo
 ## phase 1
-- prevent inputs past the answer slot count
-- flesh out tests
-- refactor problem generation
-- factor out components
 - control input UX?
 - show answer option?
 
