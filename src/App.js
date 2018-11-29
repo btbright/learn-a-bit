@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import MissingAnswerPrompt from "./components/MissingAnswerPrompt";
 import AnswerInputs from "./components/AnswerInputs";
 import { makeMissingAnswerProblem } from "./logic/bitwiseMath";
@@ -17,6 +17,8 @@ export default function App() {
   const answerOptions = ["1", "0"];
 
   const hasPartialAnswer = userAnswer.findIndex(answer => answer !== "") !== -1;
+  const hasCompleteAnswer =
+    userAnswer.findIndex(answer => answer === "") === -1;
 
   const handleKeyDown = e => {
     const { key } = e;
@@ -29,7 +31,9 @@ export default function App() {
     const { key, shiftKey } = e;
     if (answerOptions.indexOf(key) !== -1) {
       handleAnswerUpdate(userActiveAnswerIndex, key);
-      setActiveAnswer(activeAnswer + 1);
+      if (!hasCompleteAnswer) {
+        setActiveAnswer(activeAnswer + 1);
+      }
     } else if (key === "Enter") {
       if (hasResult && result === true) {
         handleNext();
@@ -79,6 +83,7 @@ export default function App() {
   }
 
   function handleAnswerUpdate(i, answer) {
+    setResult(null);
     if (i > userAnswer.length - 1) return;
     const currentAnswerCopy = userAnswer.slice(0);
     currentAnswerCopy[i] = answer;
@@ -96,7 +101,9 @@ export default function App() {
 
   function handleAnswerClick(answer) {
     handleAnswerUpdate(userActiveAnswerIndex, answer);
-    setActiveAnswer(userActiveAnswerIndex + 1);
+    if (!hasCompleteAnswer) {
+      setActiveAnswer(userActiveAnswerIndex + 1);
+    }
     document.activeElement.blur();
   }
 
@@ -114,11 +121,8 @@ export default function App() {
   };
 
   return (
-    <AppWrapper isCorrect={hasResult && result}>
+    <AppWrapper hasResult={hasResult} isCorrect={hasResult && result}>
       <PracticeProblem>
-        <Result shouldShow={hasResult}>
-          {result ? <span>&nbsp;</span> : "incorrect"}
-        </Result>
         <MissingAnswerPrompt onPromptClick={setActiveAnswer} {...promptProps} />
         <AnswerInputs
           onAnswerClick={handleAnswerClick}
@@ -133,14 +137,32 @@ export default function App() {
   );
 }
 
+const flashRed = keyframes`
+  from {
+    background-color: rgba(150,0,0,0.2);
+  }
+
+  to {
+    background-color: white;
+  }
+`;
+
 const AppWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   touch-action: manipulation; // prevent double touch to zoom on mobile
-  background-color: ${props => (props.isCorrect ? "#e4ffe4" : "none")};
+  background-color: ${props =>
+    props.isCorrect
+      ? "#e4ffe4"
+      : "none"};
   transition: background-color 0.15s;
+
+  ${({ hasResult, isCorrect }) =>
+    hasResult &&
+    !isCorrect &&
+    css`animation: ${flashRed} 1s linear;`}
 `;
 
 const PracticeProblem = styled.div`
@@ -154,14 +176,4 @@ const PracticeProblem = styled.div`
   max-width: 600px;
   min-height: 400px;
   border-radius: 10px;
-`;
-
-const Result = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  width: 40%;
-  max-height: 200px;
-  opacity: ${props => (props.shouldShow ? 1 : 0)};
 `;

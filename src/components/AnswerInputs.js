@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBackspace, faUndo, faCheck } from '@fortawesome/free-solid-svg-icons'
 
 export default function AnswerInputs(props) {
   const {
@@ -29,10 +31,10 @@ export default function AnswerInputs(props) {
             ))}
           </InputSection>
           <InputSection>
-            <SubmitButton onClick={onSubmitClick}>Submit ✓</SubmitButton>
+            <SubmitButton onClick={onSubmitClick}>Submit&nbsp;<FontAwesomeIcon icon={faCheck} /></SubmitButton>
             {shouldShowReset ? (
               <ControlButton isIcon={true} onClick={onResetClick}>
-                ↻
+                <FontAwesomeIcon icon={faUndo} />
               </ControlButton>
             ) : (
               <ControlButton onClick={onNextClick}>New</ControlButton>
@@ -42,17 +44,17 @@ export default function AnswerInputs(props) {
               isIcon={true}
               onClick={onBackspaceClick}
             >
-              ⌫
+              <FontAwesomeIcon icon={faBackspace} />
             </ControlButton>
           </InputSection>
         </>
       )}
       {hasCorrectAnswer && (
         <SuccessButton onClick={onNextClick} isActive={true}>
+          Continue&nbsp;&nbsp;
           <span role="img" aria-label="Hooray!">
             🎉
-          </span>{" "}
-          Continue
+          </span>
         </SuccessButton>
       )}
     </Inputs>
