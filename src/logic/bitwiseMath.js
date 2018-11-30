@@ -1,18 +1,16 @@
-const bitOperations = {
+export const bitOperators = {
   binary: ["&", "|", "^", "<<", ">>"],
   unary: ["~"]
 };
 
-const operandCeiling = 16;
-const bitShiftCeiling = 3;
-
-export function makeRandomOperator() {
-  const operatorClass =
-    Math.random() < bitOperations.unary.length / bitOperations.binary.length
+export function makeRandomOperator(shouldIncludeUnary = true) {
+  const operatorClass = shouldIncludeUnary
+    ? Math.random() < bitOperators.unary.length / bitOperators.binary.length
       ? "unary"
-      : "binary";
+      : "binary"
+    : "binary";
   const isBinary = operatorClass === "binary";
-  const classOperations = bitOperations[operatorClass];
+  const classOperations = bitOperators[operatorClass];
   const operator =
     classOperations[Math.floor(Math.random() * classOperations.length)];
   const operandCount = isBinary ? 2 : 1;
@@ -26,68 +24,19 @@ export function makeRandomOperator() {
   };
 }
 
-export function makeMissingAnswerProblem() {
-  const {
-    operator,
-    operandCount,
-    isOperatorBitShift,
-    isBinary
-  } = makeRandomOperator();
-
-  // generate the operands
-  let operands = [];
-  if (!isOperatorBitShift) {
-    for (let i = 0; i < operandCount; i++) {
-      const base10Random = Math.floor(Math.random() * operandCeiling);
-      operands.push(base10Random);
-    }
-  } else {
-    const base10Random = Math.floor(Math.random() * operandCeiling);
-    operands.push(base10Random);
-    operands.push(Math.floor(Math.random() * bitShiftCeiling));
-  }
-
-  // generate the answer
-  const unPaddedAnswer = calculateAnswer(operator, operands);
-
-  // convert operands to base-2
-  if (isOperatorBitShift) {
-    operands = [operands[0].toString(2), operands[1]];
-  } else {
-    operands = operands.map(op => op.toString(2));
-  }
-
-  // pad elements appropriately so base-2 operands
-  // and the answer will be of equal length
-  const maxOperandLength = Math.max(
-    ...operands.map(operand => operand.toString().length)
-  );
-  const answer = leftPadString(unPaddedAnswer, maxOperandLength).split("");
-  operands = operands.map(operand =>
-    isOperatorBitShift ? operand : leftPadString(operand, maxOperandLength)
-  );
-
-  return {
-    isBinary,
-    operator,
-    operands,
-    answer
-  };
-}
-
-function leftPadString(strToPad, desiredLength, padCharacter = "0") {
+export function leftPadString(strToPad, desiredLength, padCharacter = "0") {
   const padLength =
     desiredLength > strToPad.length ? desiredLength - strToPad.length : 0;
   const pad = new Array(padLength).fill(padCharacter).join("");
   return `${pad}${strToPad}`;
 }
 
-function calculateAnswer(operator, operands) {
-  const base10Answer = calculateBase10Answer(operator, operands);
+export function calculateOutput(operator, operands) {
+  const base10Answer = calculateBase10Output(operator, operands);
   return base10Answer.toString(2);
 }
 
-export function calculateBase10Answer(operator, operands) {
+export function calculateBase10Output(operator, operands) {
   switch (operator) {
     case "&":
       return operands[0] & operands[1];

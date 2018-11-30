@@ -1,13 +1,18 @@
 import React from "react";
 import styled from "styled-components";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBackspace, faUndo, faCheck } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faBackspace,
+  faUndo,
+  faCheck
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function AnswerInputs(props) {
   const {
     answerOptions,
     hasCorrectAnswer,
     shouldShowReset,
+    shouldShowHints,
     isBackspaceDisabled
   } = props;
 
@@ -23,15 +28,21 @@ export default function AnswerInputs(props) {
     <Inputs>
       {!hasCorrectAnswer && (
         <>
-          <InputSection>
-            {answerOptions.map(answer => (
-              <Button key={answer} onClick={_ => onAnswerClick(answer)}>
-                {answer}
-              </Button>
+          <InputSection shouldAddBottomMargin={!shouldShowHints}>
+            {answerOptions.map((answer, i) => (
+              <ButtonWrapper key={answer}>
+                <Button onClick={_ => onAnswerClick(answer)}>
+                  {answer}
+                </Button>
+                {shouldShowHints && <InputHint> {i + 1}</InputHint>}
+              </ButtonWrapper>
             ))}
           </InputSection>
-          <InputSection>
-            <SubmitButton onClick={onSubmitClick}>Submit&nbsp;<FontAwesomeIcon icon={faCheck} /></SubmitButton>
+          <InputSection shouldAddTopMargin={!shouldShowHints}>
+            <SubmitButton onClick={onSubmitClick}>
+              Submit&nbsp;
+              <FontAwesomeIcon icon={faCheck} />
+            </SubmitButton>
             {shouldShowReset ? (
               <ControlButton isIcon={true} onClick={onResetClick}>
                 <FontAwesomeIcon icon={faUndo} />
@@ -61,7 +72,6 @@ export default function AnswerInputs(props) {
   );
 }
 
-
 const Inputs = styled.div`
   display: flex;
   flex-direction: column;
@@ -71,6 +81,21 @@ const Inputs = styled.div`
   max-height: 200px;
   min-height: 120px;
   margin-top: 2rem;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 0 4px;
+`;
+
+const InputHint = styled.p`
+  font-size: 0.5rem;
+  color: rgba(0, 0, 0, 0.3);
+  margin: 5px 0 0px;
 `;
 
 const Button = styled.button.attrs({ type: "button" })`
@@ -124,5 +149,6 @@ const InputSection = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 10px 0;
+  margin-bottom: ${props => props.shouldAddBottomMargin ? 10 : 0}px;
+  margin-top: ${props => props.shouldAddTopMargin ? 6 : 0}px;
 `;

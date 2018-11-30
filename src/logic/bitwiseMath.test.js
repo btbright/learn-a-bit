@@ -1,6 +1,6 @@
 import {
   bitwiseNotOnesComplement,
-  calculateBase10Answer,
+  calculateBase10Output,
   makeRandomOperator,
   makeMissingAnswerProblem
 } from "./bitwiseMath";
@@ -35,7 +35,7 @@ it("calculates a base10 answer", () => {
     [">>", [4, 2], 1]
   ];
   testCases.forEach(test =>
-    expect(calculateBase10Answer(test[0], test[1])).toBe(test[2])
+    expect(calculateBase10Output(test[0], test[1])).toBe(test[2])
   );
 });
 
@@ -48,36 +48,5 @@ it("chooses a valid, random operator and returns metadata", () => {
     );
     expect(operandCount).toBe(operator === "~" ? 1 : 2);
     expect(isOperatorBitShift).toBe(operator === ">>" || operator === "<<");
-  }
-});
-
-const stringLength = op => op.toString().length;
-
-it("generates a valid, missing answer problem", () => {
-  for (let i = 0; i < 20; i++) {
-    const { isBinary, operator, operands, answer } = makeMissingAnswerProblem();
-
-    // make sure there are the right number of operands
-    expect(isBinary).toBe(operands.length === 2);
-
-    // check answer was padded appropriately
-    const maxOperandLength = Math.max(...operands.map(stringLength));
-    if (operator !== ">>" && operator !== "<<") {
-        expect(answer.length === maxOperandLength).toBeTruthy();
-    } else {
-        expect(answer.length >= maxOperandLength).toBeTruthy();
-    }
-
-    // check operands were padded appropriately
-    if (operator !== ">>" && operator !== "<<" && operator !== "~") {
-      console.log(operands, operator)
-      // should be equal length
-      expect(Math.max(...operands.map(stringLength))).toBe(
-        Math.min(...operands.map(stringLength))
-      );
-    } else if (operator !== "~") {
-      // is a small base-10 number
-      expect(operands[1].toString().length).toBe(1);
-    }
   }
 });

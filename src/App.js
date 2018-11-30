@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
 import styled, { keyframes, css } from "styled-components";
+import MissingOperatorPrompt from "./components/MissingOperatorPrompt";
 import MissingAnswerPrompt from "./components/MissingAnswerPrompt";
 import AnswerInputs from "./components/AnswerInputs";
-import { makeMissingAnswerProblem } from "./logic/bitwiseMath";
+import { makeMissingOperatorProblem } from "./logic/missingOperatorProblem";
+import { makeMissingAnswerProblem } from "./logic/missingAnswerProblem";
+import { bitOperators} from "./logic/bitwiseMath";
+
+function makeProblem() {
+  return Math.random() > 0.5 ? makeMissingOperatorProblem() : makeMissingAnswerProblem();
+}
 
 export default function App() {
-  const [problem, setProblem] = useState(makeMissingAnswerProblem());
+  const [problem, setProblem] = useState(makeProblem());
   const [userAnswer, setUserAnswer] = useState(
     new Array(problem.answer.length).fill("")
   );
@@ -14,7 +21,8 @@ export default function App() {
   const hasResult = result !== null;
 
   const userActiveAnswerIndex = activeAnswer || 0;
-  const answerOptions = ["1", "0"];
+
+  const answerOptions = problem.type === "missingAnswer" ? ["1", "0"] : bitOperators.binary;
 
   const hasPartialAnswer = userAnswer.findIndex(answer => answer !== "") !== -1;
   const hasCompleteAnswer =
@@ -49,6 +57,13 @@ export default function App() {
       e.preventDefault();
     } else if (key === "Backspace") {
       handleBackspace();
+    } else if (/^\d{1}$/.test(key)){
+      const answerIndex = parseInt(key, 10) - 1;
+      if (answerIndex > answerOptions.length - 1) return;
+      handleAnswerUpdate(userActiveAnswerIndex, answerOptions[answerIndex]);
+      if (!hasCompleteAnswer) {
+        setActiveAnswer(activeAnswer + 1);
+      }
     }
   };
 
@@ -67,7 +82,7 @@ export default function App() {
   }
 
   function handleNext() {
-    const nextProblem = makeMissingAnswerProblem();
+    const nextProblem = makeProblem();
     setProblem(nextProblem);
     setUserAnswer(new Array(nextProblem.answer.length).fill(""));
     setResult(null);
@@ -107,6 +122,8 @@ export default function App() {
     document.activeElement.blur();
   }
 
+  const Prompt = problem.type === "missingAnswer" ? MissingAnswerPrompt : MissingOperatorPrompt;
+
   const promptProps = {
     problem,
     userActiveAnswerIndex,
@@ -117,13 +134,14 @@ export default function App() {
     answerOptions,
     hasCorrectAnswer: hasResult && result,
     shouldShowReset: hasPartialAnswer,
+    shouldShowHints: problem.type === "missingOperator",
     isBackspaceDisabled: userActiveAnswerIndex === 0
   };
 
   return (
     <AppWrapper hasResult={hasResult} isCorrect={hasResult && result}>
       <PracticeProblem>
-        <MissingAnswerPrompt onPromptClick={setActiveAnswer} {...promptProps} />
+        <Prompt onPromptClick={setActiveAnswer} {...promptProps} />
         <AnswerInputs
           onAnswerClick={handleAnswerClick}
           onSubmitClick={handleSubmit}
