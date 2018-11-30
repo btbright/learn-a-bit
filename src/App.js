@@ -2,14 +2,42 @@ import React, { useState, useEffect } from "react";
 import styled, { keyframes, css } from "styled-components";
 import MissingOperatorPrompt from "./components/MissingOperatorPrompt";
 import MissingAnswerPrompt from "./components/MissingAnswerPrompt";
+import ConvertToBase10Prompt from "./components/ConvertToBase10Prompt";
+import ConvertToBase2Prompt from "./components/ConvertToBase2Prompt";
 import AnswerInputs from "./components/AnswerInputs";
 import { makeMissingOperatorProblem } from "./logic/missingOperatorProblem";
 import { makeMissingAnswerProblem } from "./logic/missingAnswerProblem";
-import { bitOperators} from "./logic/bitwiseMath";
+import {
+  makeConvertToBase10Problem,
+  makeConvertToBase2Problem
+} from "./logic/conversionProblem";
+import { bitOperators } from "./logic/bitwiseMath";
+
+const problemGenerators = [
+  makeMissingAnswerProblem,
+  makeMissingOperatorProblem,
+  makeConvertToBase10Problem,
+  makeConvertToBase2Problem
+];
 
 function makeProblem() {
-  return Math.random() > 0.5 ? makeMissingOperatorProblem() : makeMissingAnswerProblem();
+  const randomIndex = Math.floor(Math.random() * problemGenerators.length);
+  return problemGenerators[randomIndex]();
 }
+
+const answerOptionsForType = {
+  missingAnswer: ["1", "0"],
+  missingOperator: bitOperators.binary,
+  convertToBase10: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+  convertToBase2: ["1", "0"]
+};
+
+const promptForType = {
+  missingAnswer: MissingAnswerPrompt,
+  missingOperator: MissingOperatorPrompt,
+  convertToBase10: ConvertToBase10Prompt,
+  convertToBase2: ConvertToBase2Prompt
+};
 
 export default function App() {
   const [problem, setProblem] = useState(makeProblem());
@@ -22,7 +50,7 @@ export default function App() {
 
   const userActiveAnswerIndex = activeAnswer || 0;
 
-  const answerOptions = problem.type === "missingAnswer" ? ["1", "0"] : bitOperators.binary;
+  const answerOptions = answerOptionsForType[problem.type];
 
   const hasPartialAnswer = userAnswer.findIndex(answer => answer !== "") !== -1;
   const hasCompleteAnswer =
@@ -57,7 +85,7 @@ export default function App() {
       e.preventDefault();
     } else if (key === "Backspace") {
       handleBackspace();
-    } else if (/^\d{1}$/.test(key)){
+    } else if (/^\d{1}$/.test(key)) {
       const answerIndex = parseInt(key, 10) - 1;
       if (answerIndex > answerOptions.length - 1) return;
       handleAnswerUpdate(userActiveAnswerIndex, answerOptions[answerIndex]);
@@ -122,7 +150,7 @@ export default function App() {
     document.activeElement.blur();
   }
 
-  const Prompt = problem.type === "missingAnswer" ? MissingAnswerPrompt : MissingOperatorPrompt;
+  const Prompt = promptForType[problem.type];
 
   const promptProps = {
     problem,
@@ -161,7 +189,7 @@ const flashRed = keyframes`
   }
 
   to {
-    background-color: white;
+    background-color: #fff;
   }
 `;
 
@@ -171,16 +199,15 @@ const AppWrapper = styled.div`
   align-items: center;
   height: 100vh;
   touch-action: manipulation; // prevent double touch to zoom on mobile
-  background-color: ${props =>
-    props.isCorrect
-      ? "#e4ffe4"
-      : "none"};
+  background-color: ${props => (props.isCorrect ? "#e4ffe4" : "none")};
   transition: background-color 0.15s;
 
   ${({ hasResult, isCorrect }) =>
     hasResult &&
     !isCorrect &&
-    css`animation: ${flashRed} 1s linear;`}
+    css`
+      animation: ${flashRed} 1s linear;
+    `}
 `;
 
 const PracticeProblem = styled.div`
