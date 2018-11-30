@@ -41,7 +41,7 @@ const promptForType = {
 
 export default function App() {
   const [problem, setProblem] = useState(makeProblem());
-  
+
   const [userAnswer, setUserAnswer] = useState(
     new Array(problem.promptLength).fill("")
   );
@@ -68,10 +68,11 @@ export default function App() {
   const handleKeyUp = e => {
     const { key, shiftKey } = e;
     if (answerOptions.indexOf(key) !== -1) {
-      handleAnswerUpdate(userActiveAnswerIndex, key);
-      if (!hasCompleteAnswer) {
-        setActiveAnswer(activeAnswer + 1);
-      }
+      handleKeyboardAnswerUpdate(key);
+    } else if (/^\d{1}$/.test(key)) {
+      const answerIndex = parseInt(key, 10) - 1;
+      if (answerIndex > answerOptions.length - 1) return;
+      handleKeyboardAnswerUpdate(answerOptions[answerIndex]);
     } else if (key === "Enter") {
       if (hasResult && result === true) {
         handleNext();
@@ -87,13 +88,6 @@ export default function App() {
       e.preventDefault();
     } else if (key === "Backspace") {
       handleBackspace();
-    } else if (/^\d{1}$/.test(key)) {
-      const answerIndex = parseInt(key, 10) - 1;
-      if (answerIndex > answerOptions.length - 1) return;
-      handleAnswerUpdate(userActiveAnswerIndex, answerOptions[answerIndex]);
-      if (!hasCompleteAnswer) {
-        setActiveAnswer(activeAnswer + 1);
-      }
     }
   };
 
@@ -106,8 +100,27 @@ export default function App() {
     };
   });
 
+  function handleKeyboardAnswerUpdate(key) {
+    if (
+      hasResult &&
+      !result &&
+      hasCompleteAnswer &&
+      userActiveAnswerIndex === problem.promptLength
+    ) {
+      resetAnswerValue(key);
+      return;
+    }
+
+    handleAnswerUpdate(userActiveAnswerIndex, key);
+    if (!hasCompleteAnswer) {
+      setActiveAnswer(activeAnswer + 1);
+    }
+  }
+
   function handleSubmit() {
-    const isCorrect = !!problem.answers.find(answer => userAnswer.join("") === answer.join(""));
+    const isCorrect = !!problem.answers.find(
+      answer => userAnswer.join("") === answer.join("")
+    );
     setResult(isCorrect);
   }
 
@@ -125,6 +138,14 @@ export default function App() {
     setActiveAnswer(0);
     setResult(null);
     document.activeElement.blur();
+  }
+
+  function resetAnswerValue(key) {
+    const newUserAnswer = new Array(problem.promptLength).fill("");
+    newUserAnswer[0] = key;
+    setUserAnswer(newUserAnswer);
+    setActiveAnswer(1);
+    setResult(null);
   }
 
   function handleAnswerUpdate(i, answer) {
