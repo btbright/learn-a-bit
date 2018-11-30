@@ -41,9 +41,11 @@ const promptForType = {
 
 export default function App() {
   const [problem, setProblem] = useState(makeProblem());
+  
   const [userAnswer, setUserAnswer] = useState(
-    new Array(problem.answer.length).fill("")
+    new Array(problem.promptLength).fill("")
   );
+
   const [activeAnswer, setActiveAnswer] = useState(null);
   const [result, setResult] = useState(null);
   const hasResult = result !== null;
@@ -58,7 +60,7 @@ export default function App() {
 
   const handleKeyDown = e => {
     const { key } = e;
-    if (key === "Tab" && activeAnswer <= problem.answer.length - 1) {
+    if (key === "Tab" && activeAnswer <= problem.promptLength - 1) {
       e.preventDefault();
     }
   };
@@ -105,21 +107,21 @@ export default function App() {
   });
 
   function handleSubmit() {
-    const isCorrect = userAnswer.join("") === problem.answer.join("");
+    const isCorrect = !!problem.answers.find(answer => userAnswer.join("") === answer.join(""));
     setResult(isCorrect);
   }
 
   function handleNext() {
     const nextProblem = makeProblem();
     setProblem(nextProblem);
-    setUserAnswer(new Array(nextProblem.answer.length).fill(""));
+    setUserAnswer(new Array(nextProblem.promptLength).fill(""));
     setResult(null);
     setActiveAnswer(0);
     document.activeElement.blur();
   }
 
   function handleResetAnswer() {
-    setUserAnswer(new Array(problem.answer.length).fill(""));
+    setUserAnswer(new Array(problem.promptLength).fill(""));
     setActiveAnswer(0);
     setResult(null);
     document.activeElement.blur();

@@ -4,9 +4,12 @@ const stringLength = op => op.toString().length;
 
 it("generates a valid, missing answer problem", () => {
   for (let i = 0; i < 20; i++) {
-    const { isBinary, operator, operands, answer, type } = makeMissingAnswerProblem();
+    const { isBinary, operator, operands, answers, promptLength, type } = makeMissingAnswerProblem();
+    const answer = answers[0];
 
     expect(type).toBe("missingAnswer");
+
+    expect(typeof promptLength).toBe("number");
 
     // make sure there are the right number of operands
     expect(isBinary).toBe(operands.length === 2);

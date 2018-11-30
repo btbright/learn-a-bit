@@ -5,10 +5,13 @@ import {
 
 it("generates a valid convert to base10 problem", () => {
   for (let i = 0; i < 20; i++) {
-    const { base2, answer, type } = makeConvertToBase10Problem();
+    const { base2, answers, type, promptLength } = makeConvertToBase10Problem();
+    const answer = answers[0];
 
     // correct type
     expect(type).toBe("convertToBase10");
+
+    expect(typeof promptLength).toBe("number");
 
     // generates correct test numbers
     expect(/^[01]+$/.test(base2)).toBeTruthy();
@@ -21,10 +24,13 @@ it("generates a valid convert to base10 problem", () => {
 
 it("generates a valid convert to base2 problem", () => {
   for (let i = 0; i < 20; i++) {
-    const { base10, answer, type } = makeConvertToBase2Problem();
+    const { base10, answers, type, promptLength } = makeConvertToBase2Problem();
+    const answer = answers[0];
 
     // correct type
     expect(type).toBe("convertToBase2");
+
+    expect(typeof promptLength).toBe("number");
 
     // generates correct test numbers
     expect(/^[0-9]+$/.test(base10)).toBeTruthy();

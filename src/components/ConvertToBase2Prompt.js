@@ -3,7 +3,8 @@ import styled from "styled-components";
 
 export default function ConvertToBase2Prompt(props) {
   const { userAnswer, userActiveAnswerIndex, problem, onPromptClick } = props;
-  const { base10, answer } = problem;
+  const { base10, promptLength } = problem;
+  const slots = new Array(promptLength).fill("");
   return (
     <Prompt>
       <EquationHalf>
@@ -11,9 +12,9 @@ export default function ConvertToBase2Prompt(props) {
       </EquationHalf>
       <DeepEquality>===</DeepEquality>
       <EquationHalf>
-        {answer.map((answerSlot, i) => (
+        {slots.map((_, i) => (
           <PromptInput
-            key={`${answerSlot}-${i}`}
+            key={i}
             isActive={i === userActiveAnswerIndex}
             hasAnswer={userAnswer[i] !== ""}
             onClick={_ => onPromptClick(i)}

@@ -48,7 +48,8 @@ export function makeMissingAnswerProblem() {
     isBinary,
     operator,
     operands,
-    answer,
+    answers: [answer],
+    promptLength: answer.length,
     type: "missingAnswer"
   };
 }

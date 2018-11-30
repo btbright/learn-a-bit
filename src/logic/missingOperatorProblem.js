@@ -1,14 +1,17 @@
-import { makeRandomOperator, calculateOutput, leftPadString } from "./bitwiseMath";
+import {
+  makeRandomOperator,
+  calculateOutput,
+  leftPadString,
+  bitOperators
+} from "./bitwiseMath";
 
 const operandCeiling = 16;
 const bitShiftCeiling = 3;
 
 export function makeMissingOperatorProblem() {
-  const {
-    operator,
-    operandCount,
-    isOperatorBitShift
-  } = makeRandomOperator(false);
+  const { operator, operandCount, isOperatorBitShift } = makeRandomOperator(
+    false
+  );
 
   // generate the operands
   let operands = [];
@@ -25,6 +28,7 @@ export function makeMissingOperatorProblem() {
 
   // generate the answer
   const unPaddedOutput = calculateOutput(operator, operands);
+  const answers = findAllCorrectOperators(unPaddedOutput, operands).map(op => [op]);
 
   // convert operands to base-2
   if (isOperatorBitShift) {
@@ -44,9 +48,15 @@ export function makeMissingOperatorProblem() {
   );
 
   return {
-    answer: [operator],
+    answers,
+    promptLength: 1,
     operands,
     output,
-    type: "missingOperator"
+    type: "missingOperator",
+    __isOriginalOperatorBitShift: isOperatorBitShift // included just for tests
   };
+}
+
+function findAllCorrectOperators(result, operands) {
+  return bitOperators.binary.filter(operator => result === calculateOutput(operator, operands));
 }

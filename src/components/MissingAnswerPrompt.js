@@ -3,7 +3,8 @@ import styled from "styled-components";
 
 export default function MissingAnswerPrompt(props) {
   const { userAnswer, userActiveAnswerIndex, problem, onPromptClick } = props;
-  const { isBinary, operands, operator, answer } = problem;
+  const { isBinary, operands, operator, promptLength } = problem;
+  const slots = new Array(promptLength).fill("");
   return (
     <Prompt>
       <EquationHalf>
@@ -14,9 +15,9 @@ export default function MissingAnswerPrompt(props) {
       </EquationHalf>
       <DeepEquality>===</DeepEquality>
       <EquationHalf>
-        {answer.map((answerSlot, i) => (
+        {slots.map((_, i) => (
           <PromptInput
-            key={`${answerSlot}-${i}`}
+            key={i}
             isActive={i === userActiveAnswerIndex}
             hasAnswer={userAnswer[i] !== ""}
             onClick={_ => onPromptClick(i)}

@@ -2,12 +2,14 @@
 const numberCeiling = 16;
 
 export function makeConvertToBase10Problem() {
-    const answer = Math.floor(Math.random() * numberCeiling);
-    const base2 = answer.toString(2);
+    const answerNumber = Math.floor(Math.random() * numberCeiling);
+    const base2 = answerNumber.toString(2);
+    const answer = answerNumber.toString().split("")
 
     return {
         base2,
-        answer: answer.toString().split(""),
+        answers: [answer],
+        promptLength: answer.length,
         type: "convertToBase10"
     }
 }
@@ -17,7 +19,8 @@ export function makeConvertToBase2Problem() {
 
     return {
         base10: base10.toString(),
-        answer,
+        answers: [answer],
+        promptLength: answer.length,
         type: "convertToBase2"
     }
 }
