@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled, { keyframes, css } from "styled-components";
-import MissingOperatorPrompt from "./components/MissingOperatorPrompt";
-import MissingAnswerPrompt from "./components/MissingAnswerPrompt";
-import ConvertToBase10Prompt from "./components/ConvertToBase10Prompt";
-import ConvertToBase2Prompt from "./components/ConvertToBase2Prompt";
+import MissingOperatorPrompt from "./components/prompts/MissingOperatorPrompt";
+import MissingAnswerPrompt from "./components/prompts/MissingAnswerPrompt";
+import ConvertToBase10Prompt from "./components/prompts/ConvertToBase10Prompt";
+import ConvertToBase2Prompt from "./components/prompts/ConvertToBase2Prompt";
 import AnswerInputs from "./components/AnswerInputs";
 import { makeMissingOperatorProblem } from "./logic/missingOperatorProblem";
 import { makeMissingAnswerProblem } from "./logic/missingAnswerProblem";
