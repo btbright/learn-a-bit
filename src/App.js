@@ -166,6 +166,15 @@ export default function App() {
   }
 
   function handleAnswerClick(answer) {
+    if (
+      hasResult &&
+      !result &&
+      hasCompleteAnswer &&
+      userActiveAnswerIndex === problem.promptLength
+    ) {
+      resetAnswerValue(answer);
+      return;
+    }
     handleAnswerUpdate(userActiveAnswerIndex, answer);
     if (!hasCompleteAnswer) {
       setActiveAnswer(userActiveAnswerIndex + 1);

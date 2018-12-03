@@ -35,6 +35,7 @@ const Prompt = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
+  margin-bottom: 29px;
 
   p {
     color: rgba(0, 0, 0, 0.8);
@@ -43,6 +44,7 @@ const Prompt = styled.div`
 
   @media (max-width: 768px) {
     flex-direction: column;
+    margin-bottom: 58px;
   }
 `;
 

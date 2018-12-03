@@ -9,12 +9,12 @@ export default function MissingOperatorPrompt(props) {
       <EquationHalf>
         <Operand>{operands[0]}</Operand>{" "}
         <PromptInput
-            isActive={0 === userActiveAnswerIndex}
-            hasAnswer={userAnswer[0] !== ""}
-            onClick={_ => onPromptClick(0)}
-          >
-            {userAnswer[0]}
-          </PromptInput>
+          isActive={0 === userActiveAnswerIndex}
+          hasAnswer={userAnswer[0] !== ""}
+          onClick={_ => onPromptClick(0)}
+        >
+          {userAnswer[0]}
+        </PromptInput>
         <Operand>{operands[1]}</Operand>{" "}
       </EquationHalf>
       <DeepEquality>===</DeepEquality>
@@ -30,6 +30,7 @@ const Prompt = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
+  margin-bottom: 29px;
 
   p {
     color: rgba(0, 0, 0, 0.8);
@@ -38,6 +39,7 @@ const Prompt = styled.div`
 
   @media (max-width: 768px) {
     flex-direction: column;
+    margin-bottom: 58px;
   }
 `;
 

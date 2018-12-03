@@ -9,19 +9,23 @@ export default function ConvertToBase2Prompt(props) {
     <Prompt>
       <EquationHalf>
         <Operand>{base10}</Operand>
+        <Label>base 10</Label>
       </EquationHalf>
       <DeepEquality>===</DeepEquality>
       <EquationHalf>
-        {slots.map((_, i) => (
-          <PromptInput
-            key={i}
-            isActive={i === userActiveAnswerIndex}
-            hasAnswer={userAnswer[i] !== ""}
-            onClick={_ => onPromptClick(i)}
-          >
-            {userAnswer[i]}
-          </PromptInput>
-        ))}
+        <AnswerSlots>
+          {slots.map((_, i) => (
+            <PromptInput
+              key={i}
+              isActive={i === userActiveAnswerIndex}
+              hasAnswer={userAnswer[i] !== ""}
+              onClick={_ => onPromptClick(i)}
+            >
+              {userAnswer[i]}
+            </PromptInput>
+          ))}
+        </AnswerSlots>
+        <Label>base 2</Label>
       </EquationHalf>
     </Prompt>
   );
@@ -30,7 +34,7 @@ export default function ConvertToBase2Prompt(props) {
 const Prompt = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
 
   p {
@@ -40,6 +44,7 @@ const Prompt = styled.div`
 
   @media (max-width: 768px) {
     flex-direction: column;
+    align-items: center;
   }
 `;
 
@@ -72,12 +77,29 @@ const Operand = styled.span`
 const DeepEquality = styled.div`
   color: rgba(0, 0, 0, 0.3);
   font-size: 1.4rem;
-  margin: 0 1rem;
+  margin: 6px 1rem 0;
+  
+  @media (max-width: 768px) {
+    margin: 0 1rem 0;
+  }
 `;
 
 const EquationHalf = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   @media (max-width: 768px) {
     margin: 1rem 0;
   }
+`;
+
+const Label = styled.small`
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.2);
+  margin-top: 14px;
+`;
+
+const AnswerSlots = styled.div`
   display: flex;
 `;

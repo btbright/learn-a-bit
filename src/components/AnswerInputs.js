@@ -28,17 +28,15 @@ export default function AnswerInputs(props) {
     <Inputs>
       {!hasCorrectAnswer && (
         <>
-          <AnswerInputSection shouldAddBottomMargin={!shouldShowHints}>
+          <AnswerInputSection>
             {answerOptions.map((answer, i) => (
               <ButtonWrapper key={answer}>
-                <Button onClick={_ => onAnswerClick(answer)}>
-                  {answer}
-                </Button>
+                <Button onClick={_ => onAnswerClick(answer)}>{answer}</Button>
                 {shouldShowHints && <InputHint> {i + 1}</InputHint>}
               </ButtonWrapper>
             ))}
           </AnswerInputSection>
-          <InputSection shouldAddTopMargin={!shouldShowHints}>
+          <InputSection>
             <SubmitButton onClick={onSubmitClick}>
               Submit&nbsp;
               <FontAwesomeIcon icon={faCheck} />
@@ -76,7 +74,7 @@ const Inputs = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  align-items: center;
+  align-items: flex-start;
   width: 40%;
   max-height: 200px;
   min-height: 120px;
@@ -84,6 +82,10 @@ const Inputs = styled.div`
 
   @media (max-width: 500px) {
     width: 90%;
+  }
+  @media (max-width: 768px) {
+    position: absolute;
+    bottom: 50px;
   }
 `;
 
@@ -152,17 +154,19 @@ const SuccessButton = styled(Button)`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 90px;
 `;
 
 const InputSection = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: ${props => props.shouldAddBottomMargin ? 10 : 0}px;
-  margin-top: ${props => props.shouldAddTopMargin ? 6 : 0}px;
+  margin-top: 4px;
 `;
 
 const AnswerInputSection = styled(InputSection)`
+  min-height: 130px;
+
   @media (max-width: 500px) {
     flex-wrap: wrap;
   }
