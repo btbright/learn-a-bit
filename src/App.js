@@ -200,7 +200,6 @@ export default function App() {
 
   return (
     <AppWrapper hasResult={hasResult} isCorrect={hasResult && result}>
-      <p>learn a bit</p>
       <PracticeProblem>
         <Prompt onPromptClick={setActiveAnswer} {...promptProps} />
         <AnswerInputs
