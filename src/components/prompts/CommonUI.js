@@ -16,6 +16,7 @@ export const Prompt = styled.div`
   @media (max-width: 500px) {
     flex-direction: column;
     margin-bottom: 58px;
+    align-items:center;
   }
 
   ${({ hasLabels }) =>
