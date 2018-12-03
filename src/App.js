@@ -12,6 +12,13 @@ import {
   makeConvertToBase2Problem
 } from "./logic/conversionProblem";
 import { bitOperators } from "./logic/bitwiseMath";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faQuestionCircle
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  faGithub
+} from "@fortawesome/fontawesome-free-brands"
 
 const problemGenerators = [
   makeMissingAnswerProblem,
@@ -200,6 +207,12 @@ export default function App() {
 
   return (
     <AppWrapper hasResult={hasResult} isCorrect={hasResult && result}>
+      <Resources>
+        <a href="https://github.com/btbright/learn-a-bit" target="_blank" rel="noopener noreferrer">
+          <FontAwesomeIcon icon={faQuestionCircle} />
+          <FontAwesomeIcon icon={faGithub} />
+        </a>
+      </Resources>
       <PracticeProblem>
         <Prompt onPromptClick={setActiveAnswer} {...promptProps} />
         <AnswerInputs
@@ -253,4 +266,20 @@ const PracticeProblem = styled.div`
   max-width: 600px;
   min-height: 400px;
   border-radius: 10px;
+`;
+
+const Resources = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+
+  a {
+    font-size: 1.35rem;
+    color: rgba(0,0,0,0.1);
+
+    svg {
+      margin: 0 3px;
+    }
+  }
 `;
