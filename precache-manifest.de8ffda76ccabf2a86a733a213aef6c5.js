@@ -4,19 +4,19 @@ self.__precacheManifest = [
     "url": "/learn-a-bit/static/js/runtime~main.196376c6.js"
   },
   {
-    "revision": "34264de5b6a2e48729db",
-    "url": "/learn-a-bit/static/js/main.34264de5.chunk.js"
+    "revision": "e1ab964b89dbef60d67b",
+    "url": "/learn-a-bit/static/js/main.e1ab964b.chunk.js"
   },
   {
     "revision": "e2492e37b25a96e87218",
     "url": "/learn-a-bit/static/js/1.e2492e37.chunk.js"
   },
   {
-    "revision": "34264de5b6a2e48729db",
+    "revision": "e1ab964b89dbef60d67b",
     "url": "/learn-a-bit/static/css/main.d5f1627a.chunk.css"
   },
   {
-    "revision": "7de7bf2b81afcba795d1199790df5df7",
+    "revision": "b7ff7bb9fa2c101a213e6c6147eafa8d",
     "url": "/learn-a-bit/index.html"
   }
 ];
