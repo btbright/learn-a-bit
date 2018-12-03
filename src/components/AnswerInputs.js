@@ -107,6 +107,10 @@ const InputHint = styled.p`
   font-size: 0.5rem;
   color: rgba(0, 0, 0, 0.3);
   margin: 5px 0 0px;
+
+  @media (max-width: 500px) {
+    display: none;
+  }
 `;
 
 const Button = styled.button.attrs({ type: "button" })`
