@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/learn-a-bit/static/css/main.d5f1627a.chunk.css"
   },
   {
-    "revision": "71966481368d079adef5a261ebdb6332",
+    "revision": "7de7bf2b81afcba795d1199790df5df7",
     "url": "/learn-a-bit/index.html"
   }
 ];
