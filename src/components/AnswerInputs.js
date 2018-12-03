@@ -83,7 +83,7 @@ const Inputs = styled.div`
   @media (max-width: 500px) {
     width: 90%;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 500px) {
     position: absolute;
     bottom: 50px;
   }

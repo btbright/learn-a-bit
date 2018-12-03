@@ -42,7 +42,7 @@ const Prompt = styled.div`
     font-size: 2rem;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 500px) {
     flex-direction: column;
     align-items: center;
   }
@@ -71,7 +71,7 @@ const PromptInput = styled.div`
 const Operand = styled.span`
   color: rgba(0, 0, 0, 0.8);
   font-size: 2rem;
-  margin: 0 1rem;
+  margin: 0;
 `;
 
 const DeepEquality = styled.div`
@@ -79,7 +79,7 @@ const DeepEquality = styled.div`
   font-size: 1.4rem;
   margin: 6px 1rem 0;
   
-  @media (max-width: 768px) {
+  @media (max-width: 500px) {
     margin: 0 1rem 0;
   }
 `;
@@ -89,7 +89,7 @@ const EquationHalf = styled.div`
   flex-direction: column;
   align-items: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: 500px) {
     margin: 1rem 0;
   }
 `;

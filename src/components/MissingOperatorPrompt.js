@@ -37,7 +37,7 @@ const Prompt = styled.div`
     font-size: 2rem;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 500px) {
     flex-direction: column;
     margin-bottom: 58px;
   }
@@ -67,6 +67,13 @@ const Operand = styled.span`
   color: rgba(0, 0, 0, 0.8);
   font-size: 2rem;
   margin: 0 1rem;
+
+  &:first-child {
+    margin-left: 0;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
 `;
 
 const Output = styled(Operand)``;
@@ -78,7 +85,7 @@ const DeepEquality = styled.div`
 `;
 
 const EquationHalf = styled.div`
-  @media (max-width: 768px) {
+  @media (max-width: 500px) {
     margin: 1rem 0;
   }
   display: flex;
