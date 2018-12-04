@@ -17,7 +17,8 @@ import {
   faQuestionCircle
 } from "@fortawesome/free-solid-svg-icons";
 import {
-  faGithub
+  faGithub,
+  faTwitter
 } from "@fortawesome/fontawesome-free-brands"
 
 const problemGenerators = [
@@ -208,9 +209,14 @@ export default function App() {
   return (
     <AppWrapper hasResult={hasResult} isCorrect={hasResult && result}>
       <Resources>
-        <a href="https://github.com/btbright/learn-a-bit" target="_blank" rel="noopener noreferrer">
+        <a href="https://github.com/btbright/learn-a-bit/blob/master/README.md" target="_blank" rel="noopener noreferrer">
           <FontAwesomeIcon icon={faQuestionCircle} />
+        </a>
+        <a href="https://github.com/btbright/learn-a-bit" target="_blank" rel="noopener noreferrer">
           <FontAwesomeIcon icon={faGithub} />
+        </a>
+        <a href="https://twitter.com/btbright" target="_blank" rel="noopener noreferrer">
+          <FontAwesomeIcon icon={faTwitter} />
         </a>
       </Resources>
       <PracticeProblem>
@@ -277,9 +283,6 @@ const Resources = styled.div`
   a {
     font-size: 1.35rem;
     color: rgba(0,0,0,0.1);
-
-    svg {
-      margin: 0 3px;
-    }
+    margin: 0 3px;
   }
 `;
