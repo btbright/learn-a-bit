@@ -1,12 +1,9 @@
 import {
   makeRandomOperator,
   calculateOutput,
-  leftPadString,
-  bitOperators
+  leftPadString
 } from "./bitwiseMath";
-
-const operandCeiling = 16;
-const bitShiftCeiling = 3;
+import { missingComponentOperandCeiling, bitShiftCeiling, bitOperators } from "./constants";
 
 export function makeMissingOperatorProblem() {
   const { operator, operandCount, isOperatorBitShift } = makeRandomOperator(
@@ -17,18 +14,24 @@ export function makeMissingOperatorProblem() {
   let operands = [];
   if (!isOperatorBitShift) {
     for (let i = 0; i < operandCount; i++) {
-      const base10Random = Math.floor(Math.random() * operandCeiling);
+      const base10Random = Math.floor(
+        Math.random() * missingComponentOperandCeiling
+      );
       operands.push(base10Random);
     }
   } else {
-    const base10Random = Math.floor(Math.random() * operandCeiling);
+    const base10Random = Math.floor(
+      Math.random() * missingComponentOperandCeiling
+    );
     operands.push(base10Random);
     operands.push(Math.floor(Math.random() * bitShiftCeiling));
   }
 
   // generate the answer
   const unPaddedOutput = calculateOutput(operator, operands);
-  const answers = findAllCorrectOperators(unPaddedOutput, operands).map(op => [op]);
+  const answers = findAllCorrectOperators(unPaddedOutput, operands).map(op => [
+    op
+  ]);
 
   // convert operands to base-2
   if (isOperatorBitShift) {
@@ -58,5 +61,7 @@ export function makeMissingOperatorProblem() {
 }
 
 function findAllCorrectOperators(result, operands) {
-  return bitOperators.binary.filter(operator => result === calculateOutput(operator, operands));
+  return bitOperators.binary.filter(
+    operator => result === calculateOutput(operator, operands)
+  );
 }

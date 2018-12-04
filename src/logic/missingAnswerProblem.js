@@ -1,7 +1,9 @@
-import { makeRandomOperator, calculateOutput, leftPadString } from "./bitwiseMath";
-
-const operandCeiling = 16;
-const bitShiftCeiling = 3;
+import {
+  makeRandomOperator,
+  calculateOutput,
+  leftPadString
+} from "./bitwiseMath";
+import { missingComponentOperandCeiling, bitShiftCeiling } from "./constants";
 
 export function makeMissingAnswerProblem() {
   const {
@@ -15,11 +17,15 @@ export function makeMissingAnswerProblem() {
   let operands = [];
   if (!isOperatorBitShift) {
     for (let i = 0; i < operandCount; i++) {
-      const base10Random = Math.floor(Math.random() * operandCeiling);
+      const base10Random = Math.floor(
+        Math.random() * missingComponentOperandCeiling
+      );
       operands.push(base10Random);
     }
   } else {
-    const base10Random = Math.floor(Math.random() * operandCeiling);
+    const base10Random = Math.floor(
+      Math.random() * missingComponentOperandCeiling
+    );
     operands.push(base10Random);
     operands.push(Math.floor(Math.random() * bitShiftCeiling));
   }

@@ -1,7 +1,4 @@
-export const bitOperators = {
-  binary: ["&", "|", "^", "<<", ">>"],
-  unary: ["~"]
-};
+import { bitOperators } from "./constants";
 
 export function makeRandomOperator(shouldIncludeUnary = true) {
   const operatorClass = shouldIncludeUnary
