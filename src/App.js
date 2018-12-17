@@ -175,6 +175,7 @@ export default function App() {
 
   return (
     <AppWrapper hasResult={hasResult} isCorrect={hasResult && isResultCorrect}>
+      <Logo>learn a bit</Logo>
       <ExternalResources />
       <PracticeProblem>
         <Prompt onPromptClick={setActiveAnswer} {...promptProps} />
@@ -190,6 +191,24 @@ export default function App() {
     </AppWrapper>
   );
 }
+
+const Logo = styled.h1`
+  font-family: "Chakra Petch", sans-serif;
+  text-align: center;
+  position: absolute;
+  margin: 0 auto;
+  top: 70px;
+  letter-spacing: 0.1rem;
+  color: #333;
+  font-size: 2.5rem;
+
+  @media (max-width: 500px), (max-height: 750px) {
+    top: 7px;
+    left: 10px;
+    font-size: 1.5rem;
+    letter-spacing: .05rem;
+  }
+`;
 
 const flashRed = keyframes`
   from {
