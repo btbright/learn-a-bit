@@ -38,4 +38,3 @@ export default function ConvertToBase2Prompt(props) {
     </Prompt>
   );
 }
-

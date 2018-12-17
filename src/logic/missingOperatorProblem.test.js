@@ -4,7 +4,14 @@ const stringLength = op => op.toString().length;
 
 it("generates a valid, missing operator problem", () => {
   for (let i = 0; i < 20; i++) {
-    const { output, operands, answers, promptLength, type, __isOriginalOperatorBitShift } = makeMissingOperatorProblem();
+    const {
+      output,
+      operands,
+      answers,
+      promptLength,
+      type,
+      __isOriginalOperatorBitShift
+    } = makeMissingOperatorProblem();
     const parsedAnswers = answers.map(answer => answer[0]);
 
     expect(type).toBe("missingOperator");
@@ -19,7 +26,7 @@ it("generates a valid, missing operator problem", () => {
       } else {
         expect(output.length >= maxOperandLength).toBeTruthy();
       }
-  
+
       // check operands were padded appropriately
       if (parsedAnswer !== "~" && !__isOriginalOperatorBitShift) {
         // should be equal length
@@ -27,6 +34,6 @@ it("generates a valid, missing operator problem", () => {
           Math.min(...operands.map(stringLength))
         );
       }
-    })
+    });
   }
 });

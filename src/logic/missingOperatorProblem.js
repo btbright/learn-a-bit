@@ -3,7 +3,11 @@ import {
   calculateOutput,
   leftPadString
 } from "./bitwiseMath";
-import { missingComponentOperandCeiling, bitShiftCeiling, bitOperators } from "./constants";
+import {
+  missingComponentOperandCeiling,
+  bitShiftCeiling,
+  bitOperators
+} from "./constants";
 
 export function makeMissingOperatorProblem() {
   const { operator, operandCount, isOperatorBitShift } = makeRandomOperator(

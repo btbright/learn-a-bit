@@ -1,6 +1,6 @@
 {
   "name": "learn-a-bit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "homepage": "https://btbright.github.io/learn-a-bit",
   "dependencies": {
     "@fortawesome/fontawesome-free-brands": "^5.0.13",

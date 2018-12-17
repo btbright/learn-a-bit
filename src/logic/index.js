@@ -29,4 +29,5 @@ export const getAnswerOptionsForType = type => answerOptionsForType[type];
 
 const answerInputsTypesWithHints = ["missingOperator"];
 
-export const getShouldShowInputHintsForType = type => answerInputsTypesWithHints.indexOf(type) !== -1;
+export const getShouldShowInputHintsForType = type =>
+  answerInputsTypesWithHints.indexOf(type) !== -1;

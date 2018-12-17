@@ -206,7 +206,7 @@ const Logo = styled.h1`
     top: 7px;
     left: 10px;
     font-size: 1.5rem;
-    letter-spacing: .05rem;
+    letter-spacing: 0.05rem;
   }
 `;
 

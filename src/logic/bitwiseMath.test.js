@@ -1,8 +1,7 @@
 import {
   bitwiseNotOnesComplement,
   calculateBase10Output,
-  makeRandomOperator,
-  makeMissingAnswerProblem
+  makeRandomOperator
 } from "./bitwiseMath";
 
 it("calculates bitwise NOT - ones complement", () => {
